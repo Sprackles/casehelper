@@ -65,6 +65,7 @@
     }
     .fieldLabel {
       font-weight:bold;
+      margin-right: 8px;
     }
     #caseHelperPanel .ctxMenu {
       display:none; margin-bottom:6px;
@@ -167,13 +168,21 @@
     panel.appendChild(ctxMenu);
 
     summary.innerHTML = '';
+    
+    // XSS Fix applied here
     fields.concat('Notes').forEach(f => {
       const box = document.createElement('div');
       box.className = 'fieldBox';
-      box.innerHTML = `
-        <span class="fieldLabel">${f}:</span>
-        <span>${savedData[f] || ''}</span>
-      `;
+      
+      const labelSpan = document.createElement('span');
+      labelSpan.className = 'fieldLabel';
+      labelSpan.textContent = f + ':';
+      
+      const valueSpan = document.createElement('span');
+      valueSpan.textContent = savedData[f] || '';
+      
+      box.appendChild(labelSpan);
+      box.appendChild(valueSpan);
       summary.appendChild(box);
     });
 
